@@ -4,7 +4,7 @@ This repository contains my personal notes, code samples, and hands-on practice 
 
 I'm currently following two in-depth Udemy courses:
 
-1. 🎯 **[The Complete Android 14 & Kotlin Development Masterclass](https://www.udemy.com/course/android-14-kotlin-development-masterclass/)**
+1. 🎯 **[The Complete Android 14 & Kotlin Development Masterclass ](https://www.udemy.com/course/android-14-kotlin-development-masterclass/)**
 2. 🧩 **[Android Jetpack Compose: The Comprehensive Bootcamp](https://www.udemy.com/course/jetpack-compose-bootcamp/)**
 
 ### 🛠️ What you'll find here:
