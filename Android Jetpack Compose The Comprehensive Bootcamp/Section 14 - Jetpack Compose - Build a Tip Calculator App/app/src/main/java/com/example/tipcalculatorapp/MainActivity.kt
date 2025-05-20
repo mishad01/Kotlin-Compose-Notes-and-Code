@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tipcalculatorapp.components.InputField
 import com.example.tipcalculatorapp.ui.theme.TipCalculatorAppTheme
+import com.example.tipcalculatorapp.utils.calculateTotalTip
 import com.example.tipcalculatorapp.widgets.RoundIconButton
 
 class MainActivity : ComponentActivity() {
@@ -98,6 +99,8 @@ fun BillForm(onValueChanged: (String) -> Unit = {}) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val sliderPositionState = remember { mutableFloatStateOf(0f) }
+    val tipPercentage = (sliderPositionState.value * 100).toInt()
+    val tipAmountState = remember { mutableStateOf(0.0) }
 
     Surface(
         modifier = Modifier
@@ -170,13 +173,13 @@ fun BillForm(onValueChanged: (String) -> Unit = {}) {
             Row(modifier = Modifier.padding(horizontal = 3.dp, vertical = 12.dp)) {
                 Text("Text", modifier = Modifier.align(alignment = Alignment.CenterVertically))
                 Spacer(modifier = Modifier.width(200.dp))
-                Text("$33.00", modifier = Modifier.align(alignment = Alignment.CenterVertically))
+                Text("${tipAmountState.value}", modifier = Modifier.align(alignment = Alignment.CenterVertically))
             }
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("33%")
+                Text("$tipPercentage%")
                 Spacer(modifier = Modifier.height(14.dp))
 
                 //Slider
@@ -184,17 +187,23 @@ fun BillForm(onValueChanged: (String) -> Unit = {}) {
                     value = sliderPositionState.value,
                     onValueChange = { newVal ->
                         sliderPositionState.value = newVal
-                        Log.d("Slider", "$newVal")
+                        tipAmountState.value = calculateTotalTip(
+                            totalBill = totalBillState.value.toDouble(),
+                            tipPercentage = tipPercentage
+                        )
                     },
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp),
                     steps = 5,
                     onValueChangeFinished = {
+
                     }
                 )
             }
         }
     }
 }
+
+
 
 
 @Preview(showBackground = true)
