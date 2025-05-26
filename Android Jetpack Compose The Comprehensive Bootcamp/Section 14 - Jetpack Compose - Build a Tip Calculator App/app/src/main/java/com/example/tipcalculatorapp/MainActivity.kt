@@ -101,6 +101,11 @@ fun BillForm(onValueChanged: (String) -> Unit = {}) {
     val sliderPositionState = remember { mutableFloatStateOf(0f) }
     val tipPercentage = (sliderPositionState.value * 100).toInt()
     val tipAmountState = remember { mutableStateOf(0.0) }
+    val splitByState = remember { mutableStateOf(1) }
+
+    val totalPerPersonState = remember { mutableStateOf(0.0) }
+
+    TopHeader(totalPerPerson = totalPerPersonState.value)
 
     Surface(
         modifier = Modifier
@@ -129,7 +134,7 @@ fun BillForm(onValueChanged: (String) -> Unit = {}) {
                 )
             )
 
-            val count = remember { mutableStateOf(0) };
+
             Row(modifier = Modifier.padding(3.dp), horizontalArrangement = Arrangement.Start) {
                 Text("Split", modifier = Modifier.align(alignment = Alignment.CenterVertically))
                 Spacer(modifier = Modifier.width(120.dp))
@@ -140,16 +145,18 @@ fun BillForm(onValueChanged: (String) -> Unit = {}) {
                     RoundIconButton(
                         imageVector = Icons.Default.Remove,
                         onClick = {
-                            if (count.value > 0) {
-                                count.value -= 1
-                            } else {
-                                count.value = 0;
-                            }
+                            splitByState.value =
+                                if (splitByState.value > 1) splitByState.value - 1 else 1
+                            totalPerPersonState.value = calculateTotalPerPerson(
+                                totalBill = totalBillState.value.toDouble(),
+                                tipPercentage = tipPercentage,
+                                splitBy = splitByState.value
+                            )
                         },
                         backgroundColor = Color.White,
                     )
                     Text(
-                        count.value.toString(),
+                        splitByState.value.toString(),
                         modifier = Modifier
                             .align(Alignment.CenterVertically)
                             .padding(start = 9.dp, end = 9.dp)
@@ -157,10 +164,10 @@ fun BillForm(onValueChanged: (String) -> Unit = {}) {
                     RoundIconButton(
                         imageVector = Icons.Default.Add,
                         onClick = {
-                            if (count.value >= 0) {
-                                count.value += 1
+                            if (splitByState.value >= 0) {
+                                splitByState.value += 1
                             } else {
-                                count.value = 0;
+                                splitByState.value = 0;
                             }
                         },
                         backgroundColor = Color.White,
@@ -173,7 +180,10 @@ fun BillForm(onValueChanged: (String) -> Unit = {}) {
             Row(modifier = Modifier.padding(horizontal = 3.dp, vertical = 12.dp)) {
                 Text("Text", modifier = Modifier.align(alignment = Alignment.CenterVertically))
                 Spacer(modifier = Modifier.width(200.dp))
-                Text("${tipAmountState.value}", modifier = Modifier.align(alignment = Alignment.CenterVertically))
+                Text(
+                    "${tipAmountState.value}",
+                    modifier = Modifier.align(alignment = Alignment.CenterVertically)
+                )
             }
             Column(
                 verticalArrangement = Arrangement.Center,
@@ -191,6 +201,11 @@ fun BillForm(onValueChanged: (String) -> Unit = {}) {
                             totalBill = totalBillState.value.toDouble(),
                             tipPercentage = tipPercentage
                         )
+                        totalPerPersonState.value = calculateTotalPerPerson(
+                            totalBill = totalBillState.value.toDouble(),
+                            tipPercentage = tipPercentage,
+                            splitBy = splitByState.value
+                        )
                     },
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp),
                     steps = 5,
@@ -203,7 +218,10 @@ fun BillForm(onValueChanged: (String) -> Unit = {}) {
     }
 }
 
-
+fun calculateTotalPerPerson(totalBill: Double, splitBy: Int, tipPercentage: Int): Double {
+    val bill = calculateTotalTip(totalBill = totalBill, tipPercentage = tipPercentage) + totalBill
+    return (bill / splitBy)
+}
 
 
 @Preview(showBackground = true)
