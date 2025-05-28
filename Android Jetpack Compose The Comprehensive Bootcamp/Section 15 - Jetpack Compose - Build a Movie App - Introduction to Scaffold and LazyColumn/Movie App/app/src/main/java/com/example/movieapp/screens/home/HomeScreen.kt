@@ -1,6 +1,5 @@
 package com.example.movieapp.screens.home
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -31,11 +31,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.movieapp.model.Movie
+import com.example.movieapp.model.getMovies
 import com.example.movieapp.navigation.MovieScreens
+import com.example.movieapp.widgets.MovieRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController){
+fun HomeScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -44,67 +47,34 @@ fun HomeScreen(navController: NavController){
                     containerColor = MaterialTheme.colorScheme.primaryContainer
                 )
             )
-        }
-    ) { paddingValues ->
+        },
+    ) {
         MainContent(
             navController = navController,
-            modifier = Modifier.padding(paddingValues) 
+            movieList = getMovies(),
+            modifier = Modifier.padding(it)
         )
+
     }
 
 }
+
 @Composable
 fun MainContent(
     navController: NavController,
-    modifier: Modifier = Modifier, movieList: List<String> = listOf(
-        "Avatar",
-        "300",
-        "Harry Potter",
-        "Happiness",
-        "Life",
-        "Avatar",
-        "300",
-        "Harry Potter",
-        "Happiness",
-        "Life"
-    )
+    movieList: List<Movie> = getMovies(),
+    modifier: Modifier
 ) {
-    Column(modifier = modifier.padding(12.dp)) {
+    Column(modifier = modifier.padding(12.dp)) { // Use the passed-in modifier here
         LazyColumn {
             items(items = movieList) {
                 MovieRow(it) { movie ->
-                    navController.navigate(route = MovieScreens.DetailsScreen.name+"/$movie")
+                    navController.navigate(route = MovieScreens.DetailsScreen.name + "/$movie")
                 }
             }
         }
     }
 }
-@Composable
-fun MovieRow(movie: String, onItemClick: (String) -> Unit = {}) {
-    Card(
-        modifier = Modifier
-            .padding((4.dp))
-            .fillMaxWidth()
-            .height(130.dp)
-            .clickable {
-                onItemClick(movie)
-            },
-        shape = RoundedCornerShape(corner = CornerSize(16.dp)),
-        elevation = CardDefaults.elevatedCardElevation(6.dp)
 
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start,
-        ) {
-            Surface(
-                modifier = Modifier
-                    .padding(12.dp)
-                    .size(100.dp), shape = RectangleShape
-            ) {
-                Icon(imageVector = Icons.Default.AccountBox, contentDescription = "Movie Image")
-            }
-            Text(movie)
-        }
-    }
-}
+
+

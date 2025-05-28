@@ -1,37 +1,47 @@
 package com.example.movieapp.screens.details
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
+import coil3.compose.rememberAsyncImagePainter
+import com.example.movieapp.model.Movie
+import com.example.movieapp.model.getMovies
+import com.example.movieapp.widgets.MovieRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailsScreen(navController: NavController, movieData: String?) {
+fun DetailsScreen(navController: NavController, movieId: String?) {
+    val newMovieList = getMovies().filter { movie ->
+        movie.id == movieId
+    }
     Scaffold(topBar = {
         TopAppBar(
             title = { Text("Movies") },
@@ -49,8 +59,7 @@ fun DetailsScreen(navController: NavController, movieData: String?) {
             )
         )
 
-    }) {
-        innerPadding ->
+    }) { innerPadding ->
         // Content that appears under the top bar
         Column(
             modifier = Modifier
@@ -58,31 +67,31 @@ fun DetailsScreen(navController: NavController, movieData: String?) {
                 .fillMaxSize()
                 .safeDrawingPadding(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Top
         ) {
-            Text(
-                text = movieData.orEmpty(),
-                style = MaterialTheme.typography.headlineMedium
-            )
+            MovieRow(movie = newMovieList.first())
+            Spacer(modifier = Modifier.height(8.dp))
+            HorizontalDivider()
+            Text("Movie Images")
+            HorizontalScrollableImageView(newMovieList)
+
         }
     }
 
-    /* Surface(
-         modifier = Modifier
-             .fillMaxHeight()
-             .fillMaxWidth()
-             .safeDrawingPadding()
-     ) {
-         Column(
-             horizontalAlignment = Alignment.CenterHorizontally,
-             verticalArrangement = Arrangement.Center
-         ) {
-             Text(movieData.toString(), style = MaterialTheme.typography.headlineMedium)
-             Spacer(modifier = Modifier.height(23.dp))
-             Button(onClick = {
-                 navController.popBackStack()
-             }) {Text("Go Back") }
-         }
-     }*/
+}
 
+@Composable
+private fun HorizontalScrollableImageView(newMovieList: List<Movie>) {
+    LazyRow {
+        items(newMovieList[0].image) { image ->
+            Card(
+                modifier = Modifier
+                    .padding(12.dp)
+                    .size(140.dp),
+                elevation = CardDefaults.cardElevation(5.dp)
+            ) {
+                Image(painter = rememberAsyncImagePainter(image), contentDescription = null)
+            }
+        }
+    }
 }
