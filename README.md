@@ -13,6 +13,6 @@ I'm currently following two in-depth Udemy courses:
 * Mini-projects and hands-on examples
 * Notes and tips I pick up along the way
 
-This is a learning-first repository — feel free to explore, clone, and learn along with me !
+This is a learning-first repository — feel free to explore, clone, and learn along with me!
 ---
 
