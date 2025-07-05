@@ -28,6 +28,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
@@ -44,7 +46,7 @@ fun DetailsScreen(navController: NavController, movieId: String?) {
     }
     Scaffold(topBar = {
         TopAppBar(
-            title = { Text("Movies") },
+            title = { Text("Movie Details", color = Color.White) },
             navigationIcon = {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
@@ -60,10 +62,9 @@ fun DetailsScreen(navController: NavController, movieId: String?) {
         )
 
     }) { innerPadding ->
-        // Content that appears under the top bar
         Column(
             modifier = Modifier
-                .padding(innerPadding) // Properly apply padding from Scaffold
+                .padding(innerPadding)
                 .fillMaxSize()
                 .safeDrawingPadding(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -83,14 +84,19 @@ fun DetailsScreen(navController: NavController, movieId: String?) {
 @Composable
 private fun HorizontalScrollableImageView(newMovieList: List<Movie>) {
     LazyRow {
-        items(newMovieList[0].image) { image ->
+        items(newMovieList[0].images) { image ->
             Card(
                 modifier = Modifier
                     .padding(12.dp)
                     .size(140.dp),
                 elevation = CardDefaults.cardElevation(5.dp)
             ) {
-                Image(painter = rememberAsyncImagePainter(image), contentDescription = null)
+                Image(
+                    painter = rememberAsyncImagePainter(image),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
             }
         }
     }

@@ -55,7 +55,7 @@ fun MyApp() {
 fun TopHeader(totalPerPerson: Double = 133.00) {
     Surface(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth().padding(WindowInsets.safeDrawing.asPaddingValues())
             .height(150.dp)
             .clip(RoundedCornerShape(corner = CornerSize(12.dp))),
         color = Color(0xFFE9D7F7)
@@ -84,7 +84,7 @@ fun MainContent() {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TopHeader()
+        //TopHeader()
         Spacer(modifier = Modifier.height(20.dp))
         BillForm { enteredAmount ->
             println("Bill entered: $enteredAmount")
