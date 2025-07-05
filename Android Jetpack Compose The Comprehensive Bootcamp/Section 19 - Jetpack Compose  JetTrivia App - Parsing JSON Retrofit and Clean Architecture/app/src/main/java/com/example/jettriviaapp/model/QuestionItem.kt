@@ -1,4 +1,4 @@
-package com.example.jettriviaapp.data
+package com.example.jettriviaapp.model
 
 data class QuestionItem(
     val answer: String,

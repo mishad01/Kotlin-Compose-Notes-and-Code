@@ -1,6 +1,7 @@
 package com.example.jettriviaapp.di
 
 import com.example.jettriviaapp.network.QuestionApi
+import com.example.jettriviaapp.repository.QuestionRepository
 import com.example.jettriviaapp.utils.Constants
 import com.google.gson.Gson
 import dagger.Module
@@ -21,4 +22,8 @@ object AppModule {
         return Retrofit.Builder().baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create()).build().create(QuestionApi::class.java)
     }
+
+    @Singleton
+    @Provides
+    fun provideQuestionRepository(api: QuestionApi)=QuestionRepository(api)
 }
