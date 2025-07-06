@@ -1,6 +1,7 @@
 package com.example.jettriviaapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,8 +12,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.jettriviaapp.screens.QuestionsViewModel
 import com.example.jettriviaapp.ui.theme.JetTriviaAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+private const val TAG = "MainActivity" // ✅ Your own safe TAG
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,8 +27,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             JetTriviaAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    TriviaHome(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -30,18 +36,23 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
+
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun TriviaHome(viewModel: QuestionsViewModel = hiltViewModel(), modifier: Modifier) {
+    Questions(viewModel)
+}
+
+@Composable
+fun Questions(viewModel: QuestionsViewModel) {
+    val question = viewModel.data.value.data?.toMutableList()
+    Log.d("SIZE", "Questions: ${question?.size}")
 }
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     JetTriviaAppTheme {
-        Greeting("Android")
+        // Preview content
     }
 }

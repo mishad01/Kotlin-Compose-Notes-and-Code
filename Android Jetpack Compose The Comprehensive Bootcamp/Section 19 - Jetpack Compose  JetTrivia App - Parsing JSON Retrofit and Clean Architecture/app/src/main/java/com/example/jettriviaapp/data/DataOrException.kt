@@ -1,7 +1,8 @@
 package com.example.jettriviaapp.data
 
-data class DataOrException<T,Boolean,E:Exception>(
+// ✅ Fix the naming
+data class DataOrException<T, BooleanState, E : Exception>(
     var data : T? = null,
-    var loading : Boolean? = null,
+    var loading : BooleanState? = null,
     var e : E? = null
 )
