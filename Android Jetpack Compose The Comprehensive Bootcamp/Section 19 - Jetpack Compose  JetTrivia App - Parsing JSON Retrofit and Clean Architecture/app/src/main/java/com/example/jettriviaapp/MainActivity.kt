@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jettriviaapp.screens.QuestionsViewModel
+import com.example.jettriviaapp.screens.TriviaHome
 import com.example.jettriviaapp.ui.theme.JetTriviaAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -38,16 +39,8 @@ class MainActivity : ComponentActivity() {
 
 
 
-@Composable
-fun TriviaHome(viewModel: QuestionsViewModel = hiltViewModel(), modifier: Modifier) {
-    Questions(viewModel)
-}
 
-@Composable
-fun Questions(viewModel: QuestionsViewModel) {
-    val question = viewModel.data.value.data?.toMutableList()
-    Log.d("SIZE", "Questions: ${question?.size}")
-}
+
 
 @Preview(showBackground = true)
 @Composable
